@@ -2,34 +2,39 @@ package com.naumen.naumenproject.model;
 
 import javax.persistence.*;
 
+import static javax.persistence.FetchType.EAGER;
+import static javax.persistence.GenerationType.AUTO;
+
 @Entity
 @Table(name = "rent")
 public class Rent {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = AUTO)
     private Long id;
 
-
     private String title;
-    private String description;
     private String houseType;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
+    @ManyToOne(fetch = EAGER)
     @JoinColumn(name = "user_id")
     private User author;
 
-    public Rent() {}
+    public Rent() {
+    }
 
     public Rent(String title, String description, String houseType, User user) {
-        this.author = user;
         this.title = title;
         this.description = description;
         this.houseType = houseType;
+        this.author = user;
     }
 
     public String getAuthorName() {
-        return author != null ? author.getUsername(): "<none>";
+        return author != null ? author.getUsername() : "<Неизвестный пользователь>";
     }
 
     public User getAuthor() {

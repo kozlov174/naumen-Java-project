@@ -1,40 +1,36 @@
 package com.naumen.naumenproject.controller;
 
-import com.naumen.naumenproject.model.Role;
 import com.naumen.naumenproject.model.User;
-import com.naumen.naumenproject.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.naumen.naumenproject.service.RegistrationService;
+import com.naumen.naumenproject.service.UserService;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.Collections;
+import javax.validation.Valid;
 
 @Controller
+@AllArgsConstructor
+@RequestMapping("/registration")
 public class RegistrationController {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final RegistrationService registrationService;
+    private final UserService userService;
 
-    @GetMapping("/registration")
-    public String registration() {
+    @GetMapping
+    public String registration(@ModelAttribute("user") User user) {
         return "registration";
     }
 
-    @PostMapping("/registration")
-    public String registerUser(User user, Model model) {
-        User userFromDB = userRepository.findByUsername(user.getUsername());
-
-        if (userFromDB != null) {
-            model.addAttribute("message", "user already exists");
-            return "/registration";
+    @PostMapping
+    public String registerUser(@Valid @ModelAttribute("user") User user, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "registration";
         }
-
-        user.setActive(true);
-        user.setRoles(Collections.singleton(Role.USER));
-        userRepository.save(user);
-
-        return "redirect:/login";
+        return userService.signUpUser(user);
     }
 }

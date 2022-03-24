@@ -1,40 +1,65 @@
 package com.naumen.naumenproject.model;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.Set;
 
+import static javax.persistence.FetchType.EAGER;
+import static javax.persistence.GenerationType.AUTO;
+
+@Getter
+@Setter
 @Entity
 @Table(name = "user_table")
+@NoArgsConstructor
 public class User implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = AUTO)
     private Long id;
 
-    private String username;
+    @Column(name = "firstName")
+    @NotBlank(message = "Значение поля не должно быть пустым")
+    private String firstName;
+
+    @Column(name = "lastName")
+    @NotBlank(message = "Значение поля не должно быть пустым")
+    private String lastName;
+
+    @Column(name = "email")
+    @NotBlank(message = "Значение поля не должно быть пустым")
+    @Email(message = "Неверный email")
+    private String email;
+
+    @Column(name = "password")
+    @Size(min = 4, max = 16, message = "Пароль должен содержать от 4 до 16 символов")
     private String password;
+
+    @Column(name = "active")
     private boolean active;
 
-    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
+    @ElementCollection(targetClass = Role.class, fetch = EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
 
     @Override
     public boolean isAccountNonExpired() {
@@ -53,7 +78,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return isActive();
+        return active;
     }
 
     @Override
@@ -61,31 +86,13 @@ public class User implements UserDetails {
         return getRoles();
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    @Override
+    public String getUsername() {
+        return email;
     }
 
+    @Override
     public String getPassword() {
         return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
     }
 }

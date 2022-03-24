@@ -7,10 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/rent")
@@ -23,7 +22,7 @@ public class RentController {
     public String getRents(Model model) {
         Iterable<Rent> rents = rentRepository.findAll();
         model.addAttribute("rents", rents);
-        return "rent";
+        return "rents";
     }
 
     @PostMapping
@@ -32,17 +31,29 @@ public class RentController {
                           @RequestParam String description,
                           @RequestParam String houseType,
                           Model model) {
+
         Rent rent = new Rent(title, description, houseType, user);
 
         rentRepository.save(rent);
 
         Iterable<Rent> rents = rentRepository.findAll();
         model.addAttribute("rents", rents);
-        return "rent";
+        return "rents";
     }
 
     @GetMapping("/create")
     public String createRent() {
         return "create_rent";
+    }
+
+    @GetMapping("/{id}")
+    public String viewRent(@PathVariable Long id, Model model) {
+        Optional<Rent> optional = rentRepository.findById(id);
+        if (optional.isPresent()) {
+            Rent rent = optional.get();
+            model.addAttribute("rent", rent);
+            return "rent_page";
+        }
+        return "404";
     }
 }

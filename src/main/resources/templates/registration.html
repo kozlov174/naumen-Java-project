@@ -2,19 +2,71 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
     <title>Регистрация</title>
+    <style>
+        .error {
+            margin-top: 15px;
+            color: red;
+        }
+
+        .block {
+            width: 300px;
+            padding: 10px;
+        }
+
+        .input-row {
+            float: right;
+        }
+
+    </style>
 </head>
 <body>
 
 <div th:text="${message}" style="color: red"></div>
 <a href="/login">Войти в аккаунт</a>
 
-<br><hr>
+<br>
+<hr>
 
-<p>Зарегистрироваться</p>
-<form th:action="@{/registration}" method="post">
-    <div><label> Имя пользователя : <input type="text" name="username"/> </label></div>
-    <div><label> Пароль: <input type="password" name="password"/> </label></div>
-    <div><input type="submit" value="Зарегистрироваться"/></div>
+<div th:text="${err}" style="color: red">
+    Некорректный email
+</div>
+
+<br>
+
+<h1 style="color: #ff5733; text-decoration: underline; font-style: italic;">Зарегистрироваться</h1>
+
+<form th:action="@{/registration}" method="post" th:object="${user}">
+    <div class="block">
+        <label> Почта :
+            <input class="input-row" type="text" name="email" th:field="*{email}"/>
+        </label>
+        <div class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+    </div>
+
+    <div class="block">
+        <label> Имя :
+            <input class="input-row" type="text" name="firstName" th:field="*{firstName}"/>
+        </label>
+        <div class="error" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
+    </div>
+
+    <div class="block">
+        <label> Фамилия :
+            <input class="input-row" type="text" name="lastName" th:field="*{lastName}"/>
+        </label>
+        <div class="error" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
+    </div>
+
+    <div class="block">
+        <label> Пароль:
+            <input class="input-row" type="password" name="password" th:field="*{password}"/>
+        </label>
+        <div class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+    </div>
+
+    <div class="block">
+        <input type="submit" value="Зарегистрироваться"/>
+    </div>
 </form>
 
 </body>
