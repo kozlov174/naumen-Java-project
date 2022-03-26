@@ -1,4 +1,8 @@
 package com.naumen.naumenproject.repository;
 
-public interface MessageRepository {
+import com.naumen.naumenproject.entity.Message;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface MessageRepository extends JpaRepository<Message, Long> {
+    Iterable<Message> findAllByRentId(Long id);
 }

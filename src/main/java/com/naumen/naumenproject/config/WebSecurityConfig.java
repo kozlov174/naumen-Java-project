@@ -1,6 +1,6 @@
 package com.naumen.naumenproject.config;
 
-import com.naumen.naumenproject.model.Role;
+import com.naumen.naumenproject.entity.Role;
 import com.naumen.naumenproject.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;

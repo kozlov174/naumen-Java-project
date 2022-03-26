@@ -1,6 +1,6 @@
 package com.naumen.naumenproject.controller;
 
-import com.naumen.naumenproject.model.User;
+import com.naumen.naumenproject.entity.User;
 import com.naumen.naumenproject.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

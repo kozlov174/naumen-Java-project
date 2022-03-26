@@ -1,6 +1,6 @@
 package com.naumen.naumenproject.controller;
 
-import com.naumen.naumenproject.model.User;
+import com.naumen.naumenproject.entity.User;
 import com.naumen.naumenproject.service.RegistrationService;
 import com.naumen.naumenproject.service.UserService;
 import lombok.AllArgsConstructor;

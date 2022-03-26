@@ -1,4 +1,4 @@
-package com.naumen.naumenproject.model;
+package com.naumen.naumenproject.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -50,7 +50,7 @@ public class User implements UserDetails {
     private String email;
 
     @Column(name = "password")
-    @Size(min = 4, max = 16, message = "Пароль должен содержать от 4 до 16 символов")
+    @Size(min = 4, message = "Пароль должен содержать не менее 4 символов")
     private String password;
 
     @Column(name = "active")

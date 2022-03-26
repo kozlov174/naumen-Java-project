@@ -1,6 +1,6 @@
 package com.naumen.naumenproject.service;
 
-import com.naumen.naumenproject.model.User;
+import com.naumen.naumenproject.entity.User;
 import com.naumen.naumenproject.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 
-import static com.naumen.naumenproject.model.Role.USER;
+import static com.naumen.naumenproject.entity.Role.USER;
 
 @Service
 @AllArgsConstructor
@@ -36,12 +36,14 @@ public class UserService implements UserDetailsService {
             throw new IllegalStateException("Пользователь с такой почтой уже существует");
         }
 
+
         String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
+        System.out.println(encodedPassword.length());
         user.setPassword(encodedPassword);
 
         user.setActive(true);
         user.setRoles(Collections.singleton(USER));
-//        userRepository.save(user);
+        userRepository.save(user);
 
         return "redirect:/login";
     }

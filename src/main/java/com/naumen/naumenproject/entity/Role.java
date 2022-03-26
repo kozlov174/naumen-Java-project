@@ -1,4 +1,4 @@
-package com.naumen.naumenproject.model;
+package com.naumen.naumenproject.entity;
 
 import org.springframework.security.core.GrantedAuthority;
 
