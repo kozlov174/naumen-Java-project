@@ -38,9 +38,14 @@
 <div class="container">
 
     <div class="block-description">
+        <strong style="float: right; font-size: 24px; color: gold;" th:text="${rent.price + '₽'}"></strong>
         <h1 th:text="${rent.title}"></h1>
         <h4 th:text="${rent.description}"></h4>
-        <span class="d-inline-block mb-2 text-success" th:text="${rent.houseType}"></span>
+        <div>
+            <span class="mb-1 text-primary" th:text="${rent.street}"></span>,
+            <span class="mb-1 text-success" th:text="${rent.rentType}"></span>,
+            <span class="mb-1 text-muted" th:text="${rent.houseType}"></span>
+        </div>
         <div>Для связи с владельцем: <strong class="d-inline-block mb-2 text-primary" th:text="${rent.authorEmail}"></strong></div>
     </div>
 

@@ -39,26 +39,25 @@ public class RentController {
 
     // Получение страницы с созданием предложения
     @GetMapping("/create")
-    public String getCreateRentPageInfo() {
+    public String createRentPage(@ModelAttribute(name = "rent") Rent rent) {
         return "rent/create_rent";
     }
 
     // POST запрос на создание предложения
-    @PostMapping
+    @PostMapping("/create")
     public String addRent(@AuthenticationPrincipal User user,
-                          @RequestParam String title,
-                          @RequestParam String description,
-                          @RequestParam String houseType,
+                          @Valid @ModelAttribute(name = "rent") Rent rent,
+                          BindingResult bindingResult,
                           Model model) {
+        System.out.println(rent.getPrice());
+        if (bindingResult.hasErrors()) {
+            return "rent/create_rent";
+        }
 
-        Rent rent = new Rent(title, description, houseType, user);
-
+        rent.setAuthor(user);
         rentRepository.save(rent);
 
-        Iterable<Rent> rents = rentRepository.findAll();
-        model.addAttribute("rents", rents);
-
-        return "rents";
+        return "redirect:/rent";
     }
 
     // Получение страницы с информацией о жилье
@@ -166,7 +165,8 @@ public class RentController {
                 return "redirect:/rent/{id}";
             }
         }
-        return "errors/404";
+        model = getRentModel(model, id);
+        return model == null ? "errors/404" : "rent/review";
     }
 
     public boolean isAccessNotAllowed(Message message, User user) {

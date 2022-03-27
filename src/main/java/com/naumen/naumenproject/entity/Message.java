@@ -4,6 +4,7 @@ import com.naumen.naumenproject.repository.MessageRepository;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
@@ -25,7 +26,6 @@ import static javax.persistence.GenerationType.AUTO;
 @Setter
 @NoArgsConstructor
 @Table(name = "messageTable")
-@Component
 public class Message {
 
     @Id
@@ -50,6 +50,9 @@ public class Message {
     @Column
     private boolean isChanged = false;
 
+    @Column
+    private boolean isCommented = false;
+
     @ManyToOne(fetch = EAGER)
     @JoinColumn(name = "rent_id")
     private Rent rent;
@@ -68,10 +71,6 @@ public class Message {
 
     public boolean isAccessAllowed(Message message, User user) {
         return user.getRoles().contains(Role.ADMIN) || Objects.equals(message.getAuthor().getId(), user.getId());
-    }
-
-    public Double countRating(Message message) {
-        return null;
     }
 
     public String getAuthorName() {

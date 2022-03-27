@@ -16,7 +16,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Configuration
 @AllArgsConstructor
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserService userService;
@@ -30,8 +29,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/", "/registration", "/rent").permitAll()
                     .antMatchers("/rent/**").hasAnyAuthority(Role.USER.name(), Role.ADMIN.name())
                     .antMatchers("/users-info").hasAuthority(Role.ADMIN.name())
-//                    .antMatchers("rent/81/change-review**")
-//                        .access("@userSecurity.hasUserId(authentication,#userId)")
                     .anyRequest().authenticated()
                 .and()
                     .formLogin()

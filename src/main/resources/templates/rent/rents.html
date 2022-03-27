@@ -11,11 +11,12 @@
 
 <div th:insert="fragments/header::header"></div>
 
-<a style="color: red; font-size: 32px;" href="/rent/create">Создать предложение</a>
-
-<h1>Список предложений:</h1>
-
 <div class="container">
+
+    <a style="color: red; font-size: 32px;" href="/rent/create">Создать предложение</a>
+
+    <h1 style="margin-bottom: 20px;">Список предложений:</h1>
+
     <div class="row mb-2">
         <div class="col-md-6" th:each="rent: ${rents}">
             <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
@@ -23,11 +24,13 @@
                     <span>
                         <strong class="d-inline-block mb-2 text-primary">Аренда</strong>,
                         <strong class="d-inline-block mb-2 text-success" th:text="${rent.authorName}"></strong>
+                        <strong style="float: right; font-size: 24px; color: gold;" th:text="${rent.price + '₽'}"></strong>
                     </span>
 
                     <div>
-                        <div class="mb-1 text-muted" th:text="${rent.houseType}">Nov 12</div>
-                        <div></div>
+                        <span class="mb-1 text-primary" th:text="${rent.street}"></span>,
+                        <span class="mb-1 text-success" th:text="${rent.rentType}"></span>,
+                        <span class="mb-1 text-muted" th:text="${rent.houseType}"></span>
                     </div>
                     <h3 class="mb-0" th:text="${rent.title}">Featured post</h3>
                     <p class="card-text mb-auto" th:text="${rent.description}">Описание...</p>
