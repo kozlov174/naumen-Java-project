@@ -7,6 +7,8 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
+import java.util.Objects;
+
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.AUTO;
 
@@ -42,8 +44,15 @@ public class Rent {
         this.author = user;
     }
 
+    public String getAuthorEmail() {
+        return author.getEmail();
+    }
+
     public String getAuthorName() {
-        return author != null ? author.getUsername() : "<Неизвестный пользователь>";
+        return Objects.requireNonNull(author).getFirstName().length() != 0
+                || Objects.requireNonNull(author).getLastName().length() != 0
+                ? String.format("%s %s", author.getFirstName(), author.getLastName())
+                : "<Неизвестный пользователь>";
     }
 
 }

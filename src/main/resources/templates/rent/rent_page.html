@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <title>Арендовать</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <style>
+
+        .block-description {
+            margin: 15px 0;
+            padding: 5px;
+            width: 800px;
+            height: auto;
+            border: 1px solid black;
+        }
+
+        .block-message {
+            margin: 15px 0;
+            padding: 5px;
+            width: 300px;
+            height: auto;
+            border: 1px solid black;
+        }
+
+        .message-btn {
+            float: right;
+        }
+
+
+    </style>
+</head>
+<body>
+
+<div th:insert="fragments/header::header"></div>
+
+<div class="container">
+
+    <div class="block-description">
+        <h1 th:text="${rent.title}"></h1>
+        <h4 th:text="${rent.description}"></h4>
+        <span class="d-inline-block mb-2 text-success" th:text="${rent.houseType}"></span>
+        <div>Для связи с владельцем: <strong class="d-inline-block mb-2 text-primary" th:text="${rent.authorEmail}"></strong></div>
+    </div>
+
+    <a style="margin-top: 20px; font-size: 32px; color: #00008B" th:href="${ '/rent/' + rent.id + '/review' }">Оставьте отзыв</a>
+
+
+    <div class="block-message" th:each="message: ${messages}">
+
+        <div class="message-btn" th:if="${message.isAccessAllowed(message, #authentication.getPrincipal())}">
+
+            <form th:action="@{/rent/{id}(id=${rent.id})}"
+                  th:method="post" th:object="${message}">
+                <input type="radio" name="delete" th:value="*{id}" id="delete" checked hidden><label for="delete"></label>
+                <button type="submit" class="btn-close" aria-label="Close"></button>
+            </form>
+
+            <a th:href="${ '/rent/' + rent.id + '/change-review/' + message.id }">
+                <div class="btn btn-outline-secondary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                        <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"></path>
+                    </svg>
+                </div>
+            </a>
+
+        </div>
+
+        <div>
+            <span th:text="${message.date}"></span>
+            <span th:if="${message.isChanged}" style="margin-left: 15px; color: #A52A2A;">(Изменено)</span>
+        </div>
+        <div>
+            <strong class="d-inline-block mb-2 text-success" th:text="${message.authorName}"></strong>,
+            <strong th:text="${message.rating}"></strong>/5
+        </div>
+        <span th:text="${message.messageText}"></span>
+    </div>
+
+</div>
+
+</body>
+</html>

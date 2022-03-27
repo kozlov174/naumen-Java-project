@@ -1,13 +1,21 @@
 package com.naumen.naumenproject.entity;
 
+import com.naumen.naumenproject.repository.MessageRepository;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+
+import java.security.Principal;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Objects;
+import java.util.Set;
 
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.AUTO;
@@ -17,6 +25,7 @@ import static javax.persistence.GenerationType.AUTO;
 @Setter
 @NoArgsConstructor
 @Table(name = "messageTable")
+@Component
 public class Message {
 
     @Id
@@ -25,7 +34,8 @@ public class Message {
 
     @Column(
             name = "messageText",
-            columnDefinition = "TEXT"
+            columnDefinition = "TEXT",
+            length = 200
     )
     @NotBlank(message = "Поле не должно быть пустым")
     private String messageText;
@@ -33,7 +43,12 @@ public class Message {
     @Min(value = 1, message = "Поставьте оценку")
     @Max(value = 5, message = "Поставьте оценку")
     private int rating;
+
+    @Column
     private String date;
+
+    @Column
+    private boolean isChanged = false;
 
     @ManyToOne(fetch = EAGER)
     @JoinColumn(name = "rent_id")
@@ -49,6 +64,14 @@ public class Message {
         this.author = user;
         this.rent = rent;
         this.date = date;
+    }
+
+    public boolean isAccessAllowed(Message message, User user) {
+        return user.getRoles().contains(Role.ADMIN) || Objects.equals(message.getAuthor().getId(), user.getId());
+    }
+
+    public Double countRating(Message message) {
+        return null;
     }
 
     public String getAuthorName() {
