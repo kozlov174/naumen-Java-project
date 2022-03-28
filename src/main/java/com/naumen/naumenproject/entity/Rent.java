@@ -3,11 +3,11 @@ package com.naumen.naumenproject.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.format.annotation.NumberFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import java.text.NumberFormat;
 import java.util.Objects;
 
 import static javax.persistence.FetchType.EAGER;
@@ -44,7 +44,6 @@ public class Rent {
 
     @Column(name = "price")
     @Min(value = 0, message = "Некорректная цена")
-    @NumberFormat
     private Double price;
 
     @Column
@@ -67,6 +66,12 @@ public class Rent {
 
     public String getAuthorEmail() {
         return author.getEmail();
+    }
+
+    public String getRentPrice() {
+        NumberFormat formatter = NumberFormat.getCurrencyInstance();
+        String moneyString = formatter.format(getPrice());
+        return getPrice() == 0 ? "Бесплатно": moneyString;
     }
 
     public String getAuthorName() {
