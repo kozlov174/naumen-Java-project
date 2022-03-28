@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>Арендовать</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <style>
 
@@ -38,6 +39,7 @@
 <div class="container">
 
     <div class="block-description">
+        <h3>Объявление пользователя: <a th:href="${'/profile/' + rent.author}" th:text="${rent.authorName}"></a></h3>
         <strong style="float: right; font-size: 24px; color: gold;" th:text="${rent.rentPrice}"></strong>
         <h1 th:text="${rent.title}"></h1>
         <h4 th:text="${rent.description}"></h4>
@@ -56,8 +58,7 @@
 
         <div class="message-btn" th:if="${message.isAccessAllowed(message, #authentication.getPrincipal())}">
 
-            <form th:action="@{/rent/{id}(id=${rent.id})}"
-                  th:method="post" th:object="${message}">
+            <form th:action="@{/rent/{id}(id=${rent.id})}" th:method="post" th:object="${message}">
                 <input type="radio" name="delete" th:value="*{id}" id="delete" checked hidden><label for="delete"></label>
                 <button type="submit" class="btn-close" aria-label="Close"></button>
             </form>
@@ -77,7 +78,7 @@
             <span th:if="${message.isChanged}" style="margin-left: 15px; color: #A52A2A;">(Изменено)</span>
         </div>
         <div>
-            <strong class="d-inline-block mb-2 text-success" th:text="${message.authorName}"></strong>,
+            <a th:href="${'/profile/' + message.author}"><strong th:text="${message.authorName}"></strong></a>,
             <strong th:text="${message.rating}"></strong>/5
         </div>
         <span th:text="${message.messageText}"></span>

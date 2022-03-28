@@ -12,7 +12,6 @@ import java.util.Objects;
 
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.AUTO;
-import static org.springframework.format.annotation.NumberFormat.Style.CURRENCY;
 
 @Entity
 @Getter
@@ -79,6 +78,12 @@ public class Rent {
                 || Objects.requireNonNull(author).getLastName().length() != 0
                 ? String.format("%s %s", author.getFirstName(), author.getLastName())
                 : "<Неизвестный пользователь>";
+    }
+
+    public String getProfileTitle(Iterable<Rent> rents) {
+        return rents.spliterator().getExactSizeIfKnown() == 0
+                ? "Пользователь не не делал публикаций"
+                : "Публикации пользователя:";
     }
 
 }

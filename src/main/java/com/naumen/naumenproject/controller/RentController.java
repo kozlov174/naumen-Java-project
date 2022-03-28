@@ -2,7 +2,6 @@ package com.naumen.naumenproject.controller;
 
 import com.naumen.naumenproject.entity.Message;
 import com.naumen.naumenproject.entity.Rent;
-import com.naumen.naumenproject.entity.Role;
 import com.naumen.naumenproject.entity.User;
 import com.naumen.naumenproject.repository.MessageRepository;
 import com.naumen.naumenproject.repository.RentRepository;
@@ -14,7 +13,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Objects;
 import java.util.Optional;
 
 @Controller

@@ -1,22 +1,15 @@
 package com.naumen.naumenproject.entity;
 
-import com.naumen.naumenproject.repository.MessageRepository;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.core.annotation.Order;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-
-import java.security.Principal;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Objects;
-import java.util.Set;
 
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.AUTO;
@@ -26,6 +19,7 @@ import static javax.persistence.GenerationType.AUTO;
 @Setter
 @NoArgsConstructor
 @Table(name = "messageTable")
+@Order
 public class Message {
 
     @Id

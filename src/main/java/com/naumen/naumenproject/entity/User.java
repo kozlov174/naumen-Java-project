@@ -95,5 +95,9 @@ public class User implements UserDetails {
     public String getPassword() {
         return password;
     }
+    
+    public String getFullName() {
+        return String.format("%s %s", getLastName(), getFirstName());
+    }
 
 }
