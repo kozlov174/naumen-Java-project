@@ -16,7 +16,7 @@
 <body class="text-center">
 
 <main class="form-signin">
-    <div th:if="${param.error}" th:text="${param}" style="color: red">
+    <div th:if="${param.error}" style="color: red">
         Неверное имя пользователя или пароль.
     </div>
     <br>
@@ -34,7 +34,7 @@
 
         <input class="w-100 btn btn-lg btn-primary" type="submit" value="Войти"/>
     </form>
-    <a class="w-100 btn btn-lg btn-primary" style="margin-top: 5px;">Зарегистрироваться</a>
+    <a th:href="@{/registration}" class="w-100 btn btn-lg btn-primary" style="margin-top: 5px;">Зарегистрироваться</a>
 </main>
 
 </body>

@@ -70,7 +70,7 @@ public class Rent {
     public String getRentPrice() {
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
         String moneyString = formatter.format(getPrice());
-        return getPrice() == 0 ? "Бесплатно": moneyString;
+        return getPrice() == 0 ? "Бесплатно" : moneyString;
     }
 
     public String getAuthorName() {
@@ -84,6 +84,12 @@ public class Rent {
         return rents.spliterator().getExactSizeIfKnown() == 0
                 ? "Пользователь не не делал публикаций"
                 : "Публикации пользователя:";
+    }
+
+    public boolean isAccessRestricted(User user) {
+        boolean isUserAuthor = user.getId().equals(getAuthor().getId());
+        boolean isUserAdmin = user.getRoles().contains(Role.ADMIN);
+        return isUserAuthor || isUserAdmin;
     }
 
 }

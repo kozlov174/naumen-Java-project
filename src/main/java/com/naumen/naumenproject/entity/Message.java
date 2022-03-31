@@ -68,6 +68,9 @@ public class Message {
     }
 
     public String getAuthorName() {
-        return author != null ? author.getUsername() : "<Неизвестный пользователь>";
+        return Objects.requireNonNull(author).getFirstName().length() != 0
+                || Objects.requireNonNull(author).getLastName().length() != 0
+                ? String.format("%s %s", author.getFirstName(), author.getLastName())
+                : "<Неизвестный пользователь>";
     }
 }

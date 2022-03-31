@@ -1,7 +1,6 @@
 package com.naumen.naumenproject.controller;
 
 import com.naumen.naumenproject.entity.User;
-import com.naumen.naumenproject.service.RegistrationService;
 import com.naumen.naumenproject.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -18,7 +17,6 @@ import javax.validation.Valid;
 @RequestMapping("/registration")
 public class RegistrationController {
 
-    private final RegistrationService registrationService;
     private final UserService userService;
 
     @GetMapping

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +28,8 @@ public class RentController {
 
     // Отображает все предложения
     @GetMapping
-    public String displayAllRents(Model model) {
+    public String displayAllRents(@RequestParam MultiValueMap<String, String> filters,
+                                  Model model) {
         Iterable<Rent> rents = rentRepository.findAll();
         model.addAttribute("rents", rents);
         return "rent/rents";
@@ -59,6 +61,7 @@ public class RentController {
     // Получение страницы с информацией о жилье
     @GetMapping("/{id}")
     public String viewRent(@PathVariable Long id,
+                           @AuthenticationPrincipal User user,
                            Model model) {
 
         model = getRentModel(model, id);
@@ -68,6 +71,7 @@ public class RentController {
 
         Iterable<Message> messages = messageRepository.findAllByRentId(id);
         model.addAttribute("messages", messages);
+        model.addAttribute("user", user);
 
         return "rent/rent_page";
     }
@@ -81,6 +85,69 @@ public class RentController {
             messageRepository.deleteById(msgId);
         }
         return "redirect:/rent/{id}";
+    }
+
+    // Страница с настройками аренды
+    @GetMapping("/{id}/settings")
+    public String getRentSettings(@PathVariable Long id,
+                                  @AuthenticationPrincipal User authUser,
+                                  Model model) {
+        Optional<Rent> optionalRent = rentRepository.findById(id);
+        if (optionalRent.isPresent()) {
+            Rent rent = optionalRent.get();
+            boolean isAccessRestricted = rent.isAccessRestricted(authUser);
+            if (isAccessRestricted) {
+                model.addAttribute("rent", rent);
+                return "/rent/rent-settings";
+            } else {
+                return "errors/no-access";
+            }
+        }
+        return "errors/404";
+    }
+
+    // Изменение данных об аренде
+    @PostMapping("/{id}/settings")
+    public String updateRent(@PathVariable Long id,
+                             @AuthenticationPrincipal User authUser,
+                             @Valid Rent reqRent,
+                             BindingResult bindingResult,
+                             Model model) {
+        if (bindingResult.hasErrors()) {
+            return "rent/rent-settings";
+        }
+
+        Optional<Rent> optionalRent = rentRepository.findById(id);
+        if (optionalRent.isPresent()) {
+            Rent rent = optionalRent.get();
+            rent.setTitle(reqRent.getTitle());
+            rent.setDescription(reqRent.getDescription());
+            rent.setStreet(reqRent.getStreet());
+            rent.setPrice(reqRent.getPrice());
+
+            rentRepository.save(rent);
+            return "redirect:/rent/{id}";
+        }
+        return "errors/404";
+    }
+
+    // Удалить объявление
+    @PostMapping("/{id}/settings/delete")
+    public String deleteRent(@PathVariable Long id,
+                             @AuthenticationPrincipal User authUser,
+                             Model model) {
+
+        Optional<Rent> optionalRent = rentRepository.findById(id);
+        if (optionalRent.isPresent()) {
+            Rent rent = optionalRent.get();
+            boolean isAccessRestricted = rent.isAccessRestricted(authUser);
+            if (isAccessRestricted) {
+                rentRepository.deleteById(rent.getId());
+                return "redirect:/rent";
+            }
+            return "errors/no-access";
+        }
+        return "errors/404";
     }
 
     public Model getRentModel(Model model, Long id) {

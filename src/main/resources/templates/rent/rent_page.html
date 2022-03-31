@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Арендовать</title>
@@ -39,8 +38,11 @@
 <div class="container">
 
     <div class="block-description">
+        <div th:if="${rent.isAccessRestricted(user)}">
+            <a th:href="${ rent.id + '/settings' }" style="color: red; font-weight: bold; font-size: 32px;">Изменить данные</a>
+        </div>
         <h3>Объявление пользователя: <a th:href="${'/profile/' + rent.author}" th:text="${rent.authorName}"></a></h3>
-        <strong style="float: right; font-size: 24px; color: gold;" th:text="${rent.rentPrice}"></strong>
+        <strong style="float: right; font-size: 24px; color: gold; text-shadow: 1px 1px 1px #000;" th:text="${rent.rentPrice}"></strong>
         <h1 th:text="${rent.title}"></h1>
         <h4 th:text="${rent.description}"></h4>
         <div>
