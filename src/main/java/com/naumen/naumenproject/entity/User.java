@@ -19,7 +19,9 @@ import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Set;
 
 import static javax.persistence.FetchType.EAGER;
@@ -97,7 +99,10 @@ public class User implements UserDetails {
     }
     
     public String getFullName() {
-        return String.format("%s %s", getLastName(), getFirstName());
+        return getFirstName().length() != 0
+                && getLastName().length() != 0
+                ? String.format("%s %s", getFirstName(), getLastName())
+                : "<Неизвестный пользователь>";
     }
 
 }

@@ -8,6 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import java.text.NumberFormat;
+import java.util.List;
 import java.util.Objects;
 
 import static javax.persistence.FetchType.EAGER;
@@ -53,6 +54,10 @@ public class Rent {
     private boolean isBooked;
 
     @ManyToOne(fetch = EAGER)
+    @JoinColumn(name = "renter_id")
+    private User currentRenter;
+
+    @ManyToOne(fetch = EAGER)
     @JoinColumn(name = "user_id")
     private User author;
 
@@ -75,7 +80,7 @@ public class Rent {
 
     public String getAuthorName() {
         return Objects.requireNonNull(author).getFirstName().length() != 0
-                || Objects.requireNonNull(author).getLastName().length() != 0
+                && Objects.requireNonNull(author).getLastName().length() != 0
                 ? String.format("%s %s", author.getFirstName(), author.getLastName())
                 : "<Неизвестный пользователь>";
     }
@@ -90,6 +95,14 @@ public class Rent {
         boolean isUserAuthor = user.getId().equals(getAuthor().getId());
         boolean isUserAdmin = user.getRoles().contains(Role.ADMIN);
         return isUserAuthor || isUserAdmin;
+    }
+
+    public String getPeriodText() {
+        return getRentType().equals("Длительно") ? "месяцев": "дней";
+    }
+
+    public boolean isBooked() {
+        return getCurrentRenter() != null;
     }
 
 }

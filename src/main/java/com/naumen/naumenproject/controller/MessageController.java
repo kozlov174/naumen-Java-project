@@ -51,6 +51,7 @@ public class MessageController {
             message.setDate(date);
             message.setRent(rent);
             message.setAuthor(user);
+            message.setCommented(true);
             messageRepository.save(message);
         } else {
             model = getRentModel(model, id);
@@ -109,6 +110,17 @@ public class MessageController {
         }
         model = getRentModel(model, id);
         return model == null ? "errors/404" : "rent/review";
+    }
+
+    // Удаление комментария со страницы
+    @DeleteMapping("/{id}")
+    public String deleteMessage(@PathVariable Long id,
+                                @RequestParam(name = "delete") Long msgId) {
+        Optional<Message> msgById = messageRepository.findById(msgId);
+        if (msgById.isPresent()) {
+            messageRepository.deleteById(msgId);
+        }
+        return "redirect:/rent/{id}";
     }
 
     public boolean isAccessNotAllowed(Message message, User user) {

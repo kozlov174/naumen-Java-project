@@ -1,9 +1,11 @@
 package com.naumen.naumenproject.controller;
 
 import com.naumen.naumenproject.entity.Message;
+import com.naumen.naumenproject.entity.Notification;
 import com.naumen.naumenproject.entity.Rent;
 import com.naumen.naumenproject.entity.User;
 import com.naumen.naumenproject.repository.MessageRepository;
+import com.naumen.naumenproject.repository.NotificationRepository;
 import com.naumen.naumenproject.repository.RentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,6 +18,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Optional;
 
+import static com.naumen.naumenproject.entity.RentStatus.REJECTED;
+import static com.naumen.naumenproject.entity.RentStatus.UNDER_CONSIDERATION;
+
 @Controller
 @RequestMapping("/rent")
 public class RentController {
@@ -25,6 +30,9 @@ public class RentController {
 
     @Autowired
     private MessageRepository messageRepository;
+
+    @Autowired
+    private NotificationRepository notificationRepository;
 
     // Отображает все предложения
     @GetMapping
@@ -47,23 +55,67 @@ public class RentController {
                           @Valid @ModelAttribute(name = "rent") Rent rent,
                           BindingResult bindingResult,
                           Model model) {
-        System.out.println(rent.getPrice());
         if (bindingResult.hasErrors()) {
             return "rent/create_rent";
         }
-
         rent.setAuthor(user);
         rentRepository.save(rent);
-
         return "redirect:/rent";
     }
 
     // Получение страницы с информацией о жилье
     @GetMapping("/{id}")
-    public String viewRent(@PathVariable Long id,
+    public String viewRentPage(@PathVariable Long id,
                            @AuthenticationPrincipal User user,
                            Model model) {
 
+        Optional<Notification> hasNotified = notificationRepository.findBySenderIdAndRentId(user.getId(), id);
+        Notification notification = hasNotified.orElseGet(Notification::new);
+        model.addAttribute("notification", notification);
+        return getRentPage(model, id, user);
+    }
+
+    @PostMapping("/{id}")
+    public String sendNotification(@PathVariable Long id,
+                                   @AuthenticationPrincipal User user,
+                                   @Valid Notification notificationReq,
+                                   BindingResult bindingResult,
+                                   Model model) {
+        if (bindingResult.hasErrors()) {
+            return getRentPage(model, id, user);
+        }
+
+        Optional<Rent> optional = rentRepository.findById(id);
+        if (optional.isPresent()) {
+            Rent rent = optional.get();
+            saveNotification(rent, user, notificationReq);
+            return "redirect:{id}";
+        }
+        return "errors/404";
+    }
+
+    public void saveNotification(Rent rent, User user, Notification notificationReq) {
+        boolean isUserNotAuthor = !rent.getAuthor().getId().equals(user.getId());
+        Long id = rent.getId();
+        if (isUserNotAuthor) {
+            Optional<Notification> hasNotified = notificationRepository.findBySenderIdAndRentId(user.getId(), id);
+            int period = notificationReq.getPeriod();
+            Notification notification;
+            if (hasNotified.isEmpty()) {
+                notification = new Notification(user, rent, UNDER_CONSIDERATION, rent.getAuthor(), period);
+            } else {
+                notification = hasNotified.get();
+                boolean isRejected = notification.getStatus() == REJECTED;
+                if (isRejected) {
+                    notification.setStatus(UNDER_CONSIDERATION);
+                    notification.setPeriod(period);
+                }
+            }
+            notificationRepository.save(notification);
+        }
+    }
+
+    public String getRentPage(Model model, Long id, User user) {
         model = getRentModel(model, id);
         if (model == null) {
             return "errors/404";
@@ -74,80 +126,6 @@ public class RentController {
         model.addAttribute("user", user);
 
         return "rent/rent_page";
-    }
-
-    // Удаление комментария со страницы
-    @PostMapping("/{id}")
-    public String deleteMessage(@PathVariable Long id,
-                                @RequestParam(name = "delete") Long msgId) {
-        Optional<Message> msgById = messageRepository.findById(msgId);
-        if (msgById.isPresent()) {
-            messageRepository.deleteById(msgId);
-        }
-        return "redirect:/rent/{id}";
-    }
-
-    // Страница с настройками аренды
-    @GetMapping("/{id}/settings")
-    public String getRentSettings(@PathVariable Long id,
-                                  @AuthenticationPrincipal User authUser,
-                                  Model model) {
-        Optional<Rent> optionalRent = rentRepository.findById(id);
-        if (optionalRent.isPresent()) {
-            Rent rent = optionalRent.get();
-            boolean isAccessRestricted = rent.isAccessRestricted(authUser);
-            if (isAccessRestricted) {
-                model.addAttribute("rent", rent);
-                return "/rent/rent-settings";
-            } else {
-                return "errors/no-access";
-            }
-        }
-        return "errors/404";
-    }
-
-    // Изменение данных об аренде
-    @PostMapping("/{id}/settings")
-    public String updateRent(@PathVariable Long id,
-                             @AuthenticationPrincipal User authUser,
-                             @Valid Rent reqRent,
-                             BindingResult bindingResult,
-                             Model model) {
-        if (bindingResult.hasErrors()) {
-            return "rent/rent-settings";
-        }
-
-        Optional<Rent> optionalRent = rentRepository.findById(id);
-        if (optionalRent.isPresent()) {
-            Rent rent = optionalRent.get();
-            rent.setTitle(reqRent.getTitle());
-            rent.setDescription(reqRent.getDescription());
-            rent.setStreet(reqRent.getStreet());
-            rent.setPrice(reqRent.getPrice());
-
-            rentRepository.save(rent);
-            return "redirect:/rent/{id}";
-        }
-        return "errors/404";
-    }
-
-    // Удалить объявление
-    @PostMapping("/{id}/settings/delete")
-    public String deleteRent(@PathVariable Long id,
-                             @AuthenticationPrincipal User authUser,
-                             Model model) {
-
-        Optional<Rent> optionalRent = rentRepository.findById(id);
-        if (optionalRent.isPresent()) {
-            Rent rent = optionalRent.get();
-            boolean isAccessRestricted = rent.isAccessRestricted(authUser);
-            if (isAccessRestricted) {
-                rentRepository.deleteById(rent.getId());
-                return "redirect:/rent";
-            }
-            return "errors/no-access";
-        }
-        return "errors/404";
     }
 
     public Model getRentModel(Model model, Long id) {

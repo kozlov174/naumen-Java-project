@@ -7,7 +7,7 @@
         </a>
 
         <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-            <li><a href="/" class="nav-link px-2 link-secondary">Главная</a></li>
+            <li><a href="/" class="nav-link px-2 link-dark">Главная</a></li>
             <li><a th:href="@{/rent}" class="nav-link px-2 link-dark">Арендовать</a></li>
             <li><a th:href="@{/about}" class="nav-link px-2 link-dark">О нас</a></li>
         </ul>
@@ -18,8 +18,11 @@
                    aria-expanded="false">
                     <img src="https://www.kaindl.com/fileadmin/_processed_/d/8/csm_2162_PE_Dekorbild_0ec3e17e00.jpg" alt="P" class="rounded-circle" width="32" height="32">
                 </a>
-                <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1" style="">
+                <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
                     <li><a class="dropdown-item" th:href="${'/profile/' + #authentication.getPrincipal().id}">Профиль</a></li>
+                    <li><a class="dropdown-item" th:href="@{/notifications}">Уведомления</a></li>
+                    <li><a class="dropdown-item" th:href="@{/tenants}">Ваши арендаторы</a></li>
+                    <li><a class="dropdown-item" th:href="@{/landlords}">Арендуемое</a></li>
                     <li>
                         <hr class="dropdown-divider">
                     </li>
@@ -31,11 +34,6 @@
                 </ul>
             </div>
         </div>
-
-        <!--        <div class="col-md-3">-->
-
-
-        <!--        </div>-->
 
         <div sec:authorize="isAnonymous()">
             <a th:href="@{/login}" class="btn btn-outline-primary me-2">Войти</a>

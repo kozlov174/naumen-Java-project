@@ -36,9 +36,7 @@ public class UserService implements UserDetailsService {
             throw new IllegalStateException("Пользователь с такой почтой уже существует");
         }
 
-
         String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
-        System.out.println(encodedPassword.length());
         user.setPassword(encodedPassword);
 
         user.setActive(true);
