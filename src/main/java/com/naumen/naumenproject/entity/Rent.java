@@ -8,7 +8,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import java.text.NumberFormat;
-import java.util.List;
 import java.util.Objects;
 
 import static javax.persistence.FetchType.EAGER;
@@ -98,7 +97,7 @@ public class Rent {
     }
 
     public String getPeriodText() {
-        return getRentType().equals("Длительно") ? "месяцев": "дней";
+        return getRentType().equals("Длительно") ? "месяцев" : "дней";
     }
 
     public boolean isBooked() {

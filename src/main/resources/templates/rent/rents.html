@@ -17,111 +17,86 @@
 
     <a style="color: red; font-size: 32px;" href="/rent/create"><strong>Создать предложение</strong></a>
 
-<!--    <div style="margin-top: 30px;">-->
-<!--        <form action="/rent">-->
+    <div style="margin-top: 30px;">
+        <form action="/rent">
 
-<!--            <strong>Выберите тип помещения:</strong>-->
-<!--            <div>-->
-<!--                <div class="form-check">-->
-<!--                    <input class="form-check-input" type="checkbox" name="houseType" id="flat" value="Квартира">-->
-<!--                    <label class="form-check-label" for="flat">-->
-<!--                        Квартира-->
-<!--                    </label>-->
-<!--                </div>-->
-<!--                <div class="form-check">-->
-<!--                    <input class="form-check-input" type="checkbox" name="houseType" id="house" value="Дом, дача, коттедж">-->
-<!--                    <label class="form-check-label" for="house">-->
-<!--                        Дом, дача, коттедж-->
-<!--                    </label>-->
-<!--                </div>-->
-<!--                <div class="form-check">-->
-<!--                    <input class="form-check-input" type="checkbox" name="houseType" id="room" value="Комната">-->
-<!--                    <label class="form-check-label" for="room">-->
-<!--                        Комната-->
-<!--                    </label>-->
-<!--                </div>-->
-<!--            </div>-->
-
-<!--            <strong>Выберите тип аренды:</strong>-->
-<!--            <div>-->
-<!--                <div class="form-check">-->
-<!--                    <input class="form-check-input" type="checkbox" name="rentType" id="long-term" value="Длительно">-->
-<!--                    <label class="form-check-label" for="long-term">-->
-<!--                        Длительно-->
-<!--                    </label>-->
-<!--                </div>-->
-<!--                <div class="form-check">-->
-<!--                    <input class="form-check-input" type="checkbox" name="rentType" id="daily" value="Посуточно">-->
-<!--                    <label class="form-check-label" for="daily">-->
-<!--                        Посуточно-->
-<!--                    </label>-->
-<!--                </div>-->
-<!--            </div>-->
-
-<!--            <strong>Выберите количество комнат:</strong>-->
-<!--            <div>-->
-<!--                <div class="form-check">-->
-<!--                    <input class="form-check-input" type="checkbox" name="roomsNumber" id="studio" value="Студия">-->
-<!--                    <label class="form-check-label" for="studio">-->
-<!--                        Студия-->
-<!--                    </label>-->
-<!--                </div>-->
-<!--                <div class="form-check">-->
-<!--                    <input class="form-check-input" type="checkbox" name="roomsNumber" id="1room" value="1 комната">-->
-<!--                    <label class="form-check-label" for="1room">-->
-<!--                        1 комната-->
-<!--                    </label>-->
-<!--                </div>-->
-<!--                <div class="form-check">-->
-<!--                    <input class="form-check-input" type="checkbox" name="roomsNumber" id="2rooms" value="2 комнаты">-->
-<!--                    <label class="form-check-label" for="2rooms">-->
-<!--                        2 комнаты-->
-<!--                    </label>-->
-<!--                </div>-->
-<!--                <div class="form-check">-->
-<!--                    <input class="form-check-input" type="checkbox" name="roomsNumber" id="3rooms" value="3 и более">-->
-<!--                    <label class="form-check-label" for="3rooms">-->
-<!--                        3 и более-->
-<!--                    </label>-->
-<!--                </div>-->
-<!--            </div>-->
-
-<!--            <input type="submit" value="Добавить">-->
-<!--        </form>-->
-<!--    </div>-->
-
-    <h1 style="margin-bottom: 20px;">Список предложений:</h1>
-
-    <div class="row mb-2">
-        <div class="col-md-6" th:each="rent: ${rents}">
-            <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-                <div class="col p-4 d-flex flex-column position-static">
-                    <span>
-                        <strong class="d-inline-block mb-2 text-primary">Аренда</strong>,
-                        <a th:href="${'/profile/' + rent.author}"><strong class="d-inline-block mb-2 text-success"
-                                                                          th:text="${rent.authorName}"></strong></a>
-                        <strong style="float: right; font-size: 24px; color: gold; text-shadow: 1px 1px 1px #000;" th:text="${rent.rentPrice}"></strong>
-                    </span>
-
-                    <div>
-                        <span class="mb-1 text-primary" th:text="${rent.street}"></span>,
-                        <span class="mb-1 text-success" th:text="${rent.rentType}"></span>,
-                        <span class="mb-1 text-muted" th:text="${rent.houseType}"></span>
-                    </div>
-                    <h3 class="mb-0" th:text="${rent.title}">Featured post</h3>
-                    <p class="card-text mb-auto" th:text="${rent.description}">Описание...</p>
-                    <a th:href="${'/rent/' + rent.id}" class="stretched-link">Узнать больше</a>
+            <strong>Выберите тип помещения:</strong>
+            <div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="houseType" id="flat" value="Квартира" th:checked="${params.contains('Квартира')}">
+                    <label class="form-check-label" for="flat">
+                        Квартира
+                    </label>
                 </div>
-                <div class="col-auto d-none d-lg-block">
-                    <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg"
-                         role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice"
-                         focusable="false"><title>Placeholder</title>
-                        <rect width="100%" height="100%" fill="#55595c"></rect>
-                        <text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text>
-                    </svg>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="houseType" id="house" value="Дом, дача, коттедж" th:checked="${params.contains('Дом, дача, коттедж')}">
+                    <label class="form-check-label" for="house">
+                        Дом, дача, коттедж
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="houseType" id="room" value="Комната" th:checked="${params.contains('Комната')}">
+                    <label class="form-check-label" for="room">
+                        Комната
+                    </label>
                 </div>
             </div>
-        </div>
+
+            <strong>Выберите тип аренды:</strong>
+            <div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="rentType" id="long-term" value="Длительно" th:checked="${params.contains('Длительно')}">
+                    <label class="form-check-label" for="long-term">
+                        Длительно
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="rentType" id="daily" value="Посуточно" th:checked="${params.contains('Посуточно')}">
+                    <label class="form-check-label" for="daily">
+                        Посуточно
+                    </label>
+                </div>
+            </div>
+
+            <strong>Выберите количество комнат:</strong>
+            <div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="roomsNumber" id="studio" value="Студия" th:checked="${params.contains('Студия')}">
+                    <label class="form-check-label" for="studio">
+                        Студия
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="roomsNumber" id="1room" value="1 комната" th:checked="${params.contains('1 комната')}">
+                    <label class="form-check-label" for="1room">
+                        1 комната
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="roomsNumber" id="2rooms" value="2 комнаты" th:checked="${params.contains('2 комнаты')}">
+                    <label class="form-check-label" for="2rooms">
+                        2 комнаты
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="roomsNumber" id="3rooms" value="3 и более" th:checked="${params.contains('3 и более')}">
+                    <label class="form-check-label" for="3rooms">
+                        3 и более
+                    </label>
+                </div>
+            </div>
+
+            <input class="btn btn-primary" type="submit" value="Применить">
+        </form>
+    </div>
+
+    <div th:if="${rents.empty}">
+        <h1 style="margin-bottom: 20px; color: red;">Список предложений пуст</h1>
+    </div>
+
+    <div th:if="${!rents.empty}">
+        <h1 style="margin-bottom: 20px;">Список предложений:</h1>
+        <div th:insert="fragments/rentCard::rentCard"></div>
     </div>
 </div>
 

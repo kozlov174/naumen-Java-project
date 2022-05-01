@@ -1,5 +1,6 @@
 package com.naumen.naumenproject.controller;
 
+import com.naumen.naumenproject.config.RentSpecification;
 import com.naumen.naumenproject.entity.Message;
 import com.naumen.naumenproject.entity.Notification;
 import com.naumen.naumenproject.entity.Rent;
@@ -8,6 +9,7 @@ import com.naumen.naumenproject.repository.MessageRepository;
 import com.naumen.naumenproject.repository.NotificationRepository;
 import com.naumen.naumenproject.repository.RentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +18,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static com.naumen.naumenproject.entity.RentStatus.REJECTED;
@@ -36,9 +40,20 @@ public class RentController {
 
     // Отображает все предложения
     @GetMapping
-    public String displayAllRents(@RequestParam MultiValueMap<String, String> filters,
+    public String displayAllRents(@RequestParam MultiValueMap<String, String> params,
                                   Model model) {
-        Iterable<Rent> rents = rentRepository.findAll();
+        List<String> paramsList = new ArrayList<>();
+        Iterable<Rent> rents;
+        if (params == null) {
+            rents = rentRepository.findAll();
+        } else {
+            Specification<Rent> spec = new RentSpecification(params);
+            rents = rentRepository.findAll(spec);
+            for (List<String> arr : params.values()) {
+                paramsList.addAll(arr);
+            }
+        }
+        model.addAttribute("params", paramsList);
         model.addAttribute("rents", rents);
         return "rent/rents";
     }
@@ -66,8 +81,8 @@ public class RentController {
     // Получение страницы с информацией о жилье
     @GetMapping("/{id}")
     public String viewRentPage(@PathVariable Long id,
-                           @AuthenticationPrincipal User user,
-                           Model model) {
+                               @AuthenticationPrincipal User user,
+                               Model model) {
 
         Optional<Notification> hasNotified = notificationRepository.findBySenderIdAndRentId(user.getId(), id);
         Notification notification = hasNotified.orElseGet(Notification::new);

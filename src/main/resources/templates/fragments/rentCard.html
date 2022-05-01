@@ -1,0 +1,38 @@
+<div th:fragment="rentCard">
+
+
+    <div class="row mb-2">
+        <div class="col-md-6" th:each="rent: ${rents}">
+            <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                <div class="col p-4 d-flex flex-column position-static">
+                    <span>
+                        <strong class="d-inline-block mb-2 text-primary">Аренда</strong>,
+                        <a th:href="${'/profile/' + rent.author}"><strong class="d-inline-block mb-2 text-success"
+                                                                          th:text="${rent.authorName}"></strong></a>
+                        <strong style="float: right; font-size: 24px; color: gold; text-shadow: 1px 1px 1px #000;"
+                                th:text="${rent.rentPrice}"></strong>
+                    </span>
+
+                    <div>
+                        <span class="mb-1 text-primary" th:text="${rent.street}"></span>,
+                        <span class="mb-1 text-success" th:text="${rent.rentType}"></span>,
+                        <span class="mb-1 text-muted" th:text="${rent.houseType}"></span>,
+                        <span class="mb-1 text-danger" th:text="${rent.roomsNumber}"></span>
+                    </div>
+                    <h3 class="mb-0" th:text="${rent.title}">Featured post</h3>
+                    <p class="card-text mb-auto" th:text="${rent.description}">Описание...</p>
+                    <a th:href="${'/rent/' + rent.id}" class="stretched-link">Узнать больше</a>
+                </div>
+                <div class="col-auto d-none d-lg-block">
+                    <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg"
+                         role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice"
+                         focusable="false"><title>Placeholder</title>
+                        <rect width="100%" height="100%" fill="#55595c"></rect>
+                        <text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

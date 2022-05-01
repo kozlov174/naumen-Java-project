@@ -84,8 +84,8 @@ public class MessageController {
         return "errors/404";
     }
 
-    // POST запрос на изменение комментария
-    @PostMapping("/{id}/change-review/{msg_id}")
+    // Patch запрос на изменение комментария
+    @PatchMapping("/{id}/change-review/{msg_id}")
     public String updateMessage(@PathVariable Long id,
                                 @PathVariable(name = "msg_id") Long msgId,
                                 @AuthenticationPrincipal User user,
