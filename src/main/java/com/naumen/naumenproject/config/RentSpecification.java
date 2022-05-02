@@ -23,22 +23,26 @@ public class RentSpecification implements Specification<Rent> {
     public Predicate toPredicate(Root<Rent> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
         final List<Predicate> predicates = new ArrayList<>();
         if (params.containsKey("houseType")) {
-            predicates.add(getPredicates("houseType", params, builder, root));
+            predicates.add(getPredicates("houseType", params.get("houseType"), builder, root));
         }
         if (params.containsKey("rentType")) {
-            predicates.add(getPredicates("rentType", params, builder, root));
+            predicates.add(getPredicates("rentType", params.get("rentType"), builder, root));
         }
         if (params.containsKey("roomsNumber")) {
-            predicates.add(getPredicates("roomsNumber", params, builder, root));
+            predicates.add(getPredicates("roomsNumber", params.get("roomsNumber"), builder, root));
+        }
+        if (params.containsKey("minimumPrice")) {
+            predicates.add(builder.greaterThan(root.get("price"), params.get("minimumPrice").get(0)));
+        }
+        if (params.containsKey("maximumPrice")) {
+            predicates.add(builder.lessThan(root.get("price"), params.get("maximumPrice").get(0)));
         }
         return builder.and(predicates.toArray(new Predicate[0]));
     }
 
-    private Predicate getPredicates(String paramType, MultiValueMap<String, String> params, CriteriaBuilder builder, Root<Rent> root) {
+    private Predicate getPredicates(String paramType, List<String> values, CriteriaBuilder builder, Root<Rent> root) {
         List<Predicate> predicates = new ArrayList<>();
-        if (params.containsKey(paramType)) {
-            params.get(paramType).forEach(el -> predicates.add(builder.like(root.get(paramType), el)));
-        }
+        values.forEach(el -> predicates.add(builder.like(root.get(paramType), el)));
         return builder.or(predicates.toArray(new Predicate[0]));
     }
 

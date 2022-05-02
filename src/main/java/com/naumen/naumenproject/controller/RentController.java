@@ -47,6 +47,7 @@ public class RentController {
         if (params == null) {
             rents = rentRepository.findAll();
         } else {
+            System.out.println(params);
             Specification<Rent> spec = new RentSpecification(params);
             rents = rentRepository.findAll(spec);
             for (List<String> arr : params.values()) {
