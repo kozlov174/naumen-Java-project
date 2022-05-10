@@ -44,9 +44,6 @@ public class Message {
     @Column
     private boolean isChanged = false;
 
-    @Column
-    private boolean isCommented = false;
-
     @ManyToOne(fetch = EAGER)
     @JoinColumn(name = "rent_id")
     private Rent rent;

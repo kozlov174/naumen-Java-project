@@ -34,8 +34,7 @@ public class MessageController {
     public String createMessagePage(@PathVariable Long id,
                                     @ModelAttribute(name = "message") Message message,
                                     Model model) {
-        model = getRentModel(model, id);
-        return model == null ? "errors/404" : "rent/review";
+        return getRentModel(model, id) == null ? "errors/404" : "rent/review";
     }
 
     // POST запрос на создание комментария
@@ -51,11 +50,10 @@ public class MessageController {
             message.setDate(date);
             message.setRent(rent);
             message.setAuthor(user);
-            message.setCommented(true);
+//            message.setCommented(true);
             messageRepository.save(message);
         } else {
-            model = getRentModel(model, id);
-            return model == null ? "errors/404" : "rent/review";
+            return getRentModel(model, id) == null ? "errors/404" : "rent/review";
         }
         return "redirect:/rent/{id}";
     }
@@ -108,8 +106,7 @@ public class MessageController {
                 return "redirect:/rent/{id}";
             }
         }
-        model = getRentModel(model, id);
-        return model == null ? "errors/404" : "rent/review";
+        return getRentModel(model, id) == null ? "errors/404" : "rent/review";
     }
 
     // Удаление комментария со страницы

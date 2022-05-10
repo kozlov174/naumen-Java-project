@@ -52,6 +52,9 @@ public class Rent {
     @Column
     private boolean isBooked;
 
+    @Column
+    private boolean approved = false;
+
     @ManyToOne(fetch = EAGER)
     @JoinColumn(name = "renter_id")
     private User currentRenter;

@@ -37,6 +37,7 @@ public class RentSpecification implements Specification<Rent> {
         if (params.containsKey("maximumPrice")) {
             predicates.add(builder.lessThan(root.get("price"), params.get("maximumPrice").get(0)));
         }
+        predicates.add(builder.isTrue(root.get("approved")));
         return builder.and(predicates.toArray(new Predicate[0]));
     }
 

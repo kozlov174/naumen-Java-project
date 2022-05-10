@@ -6,24 +6,14 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Objects;
 import java.util.Set;
 
+import static com.naumen.naumenproject.entity.Role.ADMIN;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.AUTO;
 
@@ -103,6 +93,10 @@ public class User implements UserDetails {
                 && getLastName().length() != 0
                 ? String.format("%s %s", getFirstName(), getLastName())
                 : "<Неизвестный пользователь>";
+    }
+
+    public boolean isAdmin() {
+        return getRoles().contains(ADMIN);
     }
 
 }

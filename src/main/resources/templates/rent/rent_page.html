@@ -38,6 +38,9 @@
 
 
 
+
+
+
     </style>
 </head>
 <body>
@@ -49,7 +52,7 @@
 
     <div class="block-description">
         <div th:if="${rent.isAccessRestricted(user)}">
-            <a th:href="${ rent.id + '/settings' }" style="color: red; font-weight: bold; font-size: 32px;">Изменить
+            <a th:href="${ rent.id + '/settings' }" class="btn btn-danger" style="font-weight: bold; font-size: 32px;">Изменить
                 данные</a>
         </div>
         <h3>Объявление пользователя: <a th:href="${'/profile/' + rent.author}" th:text="${rent.authorName}"></a></h3>
@@ -79,7 +82,7 @@
                     <span class="input-group-text" id="addon-wrapping">Количество&ensp;<span
                             th:text="${rent.getPeriodText()}"></span>:</span>
                             <div class="col-xs-4">
-                                <input type="text" name="period" class="form-control" placeholder="Введите число" value="0"
+                                <input type="text" id="Period" name="period" class="form-control" placeholder="Введите число" value="0"
                                        maxlength="10">
                             </div>
                             <span class="input-group-text">Итого:&ensp;<span id="sum">0</span> ₽</span>
@@ -115,8 +118,7 @@
             <div class="message-btn" th:if="${message.isAccessAllowed(message, #authentication.getPrincipal())}">
 
                 <form th:action="@{/rent/{id}(id=${rent.id})}" th:method="delete" th:object="${message}">
-                    <input type="radio" name="delete" th:value="*{id}" id="delete" checked hidden><label
-                        for="delete"></label>
+                    <input type="radio" name="delete" th:value="*{id}" id="delete" checked hidden><label for="delete"></label>
                     <button type="submit" class="btn-close" aria-label="Close"></button>
                 </form>
 
@@ -144,31 +146,18 @@
     </div>
 </div>
 
-<!--<script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>-->
-<!--<script type="text/javascript">-->
-<!--    $(document).ready(function () {-->
-<!--        $(".period").each(function () {-->
-<!--            $(this).keyup(function () {-->
-<!--                calculateSum();-->
-<!--            });-->
-<!--        });-->
+<script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script type="text/javascript">
+    const currPrice = [[${rent.price}]];
+    $("#Period").keyup(function (e) {
+        console.log(currPrice);
+        var period = parseInt($("#Period").val(), 10);
+        console.log(period);
+        let new_sum = period * currPrice;
+        document.getElementById("sum").textContent = new_sum || 0;
+    });
 
-<!--    });-->
-
-<!--    function calculateSum() {-->
-<!--        const currPrice = [[${rent.price}]];-->
-<!--        var sum = 0;-->
-<!--        $(".period").each(function () {-->
-<!--            if (!isNaN(this.value) && this.value.length !== 0) {-->
-<!--                sum += parseFloat(this.value) * currPrice;-->
-<!--                console.log(sum);-->
-<!--            }-->
-
-<!--        });-->
-<!--        $("#sum").html(sum.toFixed(2));-->
-<!--    }-->
-<!--</script>-->
-
+</script>
 
 </body>
 </html>

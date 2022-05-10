@@ -1,10 +1,7 @@
 package com.naumen.naumenproject.controller;
 
 import com.naumen.naumenproject.config.RentSpecification;
-import com.naumen.naumenproject.entity.Message;
-import com.naumen.naumenproject.entity.Notification;
-import com.naumen.naumenproject.entity.Rent;
-import com.naumen.naumenproject.entity.User;
+import com.naumen.naumenproject.entity.*;
 import com.naumen.naumenproject.repository.MessageRepository;
 import com.naumen.naumenproject.repository.NotificationRepository;
 import com.naumen.naumenproject.repository.RentRepository;
@@ -45,9 +42,8 @@ public class RentController {
         List<String> paramsList = new ArrayList<>();
         Iterable<Rent> rents;
         if (params == null) {
-            rents = rentRepository.findAll();
+            rents = rentRepository.findAllByApproved(true);
         } else {
-            System.out.println(params);
             Specification<Rent> spec = new RentSpecification(params);
             rents = rentRepository.findAll(spec);
             for (List<String> arr : params.values()) {
@@ -61,7 +57,7 @@ public class RentController {
 
     // Получение страницы с созданием предложения
     @GetMapping("/create")
-    public String createRentPage(@ModelAttribute(name = "rent") Rent rent) {
+    public String getCreatingRentPage(@ModelAttribute(name = "rent") Rent rent) {
         return "rent/create_rent";
     }
 
@@ -75,6 +71,7 @@ public class RentController {
             return "rent/create_rent";
         }
         rent.setAuthor(user);
+        if (user.getRoles().contains(Role.ADMIN)) rent.setApproved(true);
         rentRepository.save(rent);
         return "redirect:/rent";
     }

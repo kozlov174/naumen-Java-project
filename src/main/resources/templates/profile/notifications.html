@@ -16,7 +16,6 @@
         .block {
             margin: 10px 0;
         }
-
     </style>
 </head>
 <body>
@@ -49,7 +48,9 @@
                         <div>
                             На срок: <b th:text="${notification.period}"></b> <b th:text="${notification.getRent().getPeriodText()}"></b>
                         </div>
-
+                        <div>
+                            На сумму: <b th:text="${notification.period * notification.rent.price}"></b><b>₽</b>
+                        </div>
 
                         <div class="block">
                             <form th:action="@{/notifications}" th:method="post" class="block-btn" th:object="${notification}">
